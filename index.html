@@ -1,18 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cafezão do São João 🌻</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
+.container{max-width:600px;margin:0 auto;padding:16px}
+.screen{display:none}
+.screen.active{display:block}
+.header{text-align:center;padding:24px 0 16px}
+.header h1{font-size:22px;font-weight:600;margin-bottom:4px}
+.header p{font-size:14px;color:#666;line-height:1.5}
+.sun{font-size:40px;margin-bottom:8px}
+.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.row:last-child{border-bottom:none}
+.avatar{width:38px;height:38px;border-radius:50%;background:#d4f4e8;color:#0a6b4a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.name-col{flex:1;min-width:0}
+.fname{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lname{font-size:12px;color:#888}
+input.word{width:130px;padding:8px 10px;border-radius:10px;border:1.5px solid #e0e0e0;font-size:13px;background:#fafafa;transition:border-color 0.2s,background 0.2s;-webkit-appearance:none}
+input.word:focus{outline:none;border-color:#1D9E75;background:#fff}
+input.word.filled{border-color:#1D9E75;background:#f0fdf8}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;width:100%;transition:all 0.2s}
+.btn-green{background:#1D9E75;color:#fff}
+.btn-green:hover{background:#17876a}
+.btn-green:disabled{background:#a8dfc8;cursor:not-allowed}
+.btn-outline{background:#fff;color:#1D9E75;border:2px solid #1D9E75}
+.btn-sm{width:auto;padding:8px 18px;font-size:14px}
+.progress-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:500;background:#d4f4e8;color:#0a6b4a}
+.done-wrap{text-align:center;padding:48px 16px}
+.done-wrap h2{font-size:22px;font-weight:600;margin-bottom:8px}
+.done-wrap p{color:#666;font-size:15px;line-height:1.6;margin-bottom:24px}
+.result-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
+.result-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.top-words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.word-pill{padding:6px 14px;border-radius:20px;background:#d4f4e8;color:#0a6b4a;font-size:14px;font-weight:600;border:1px solid #a8dfc8}
+.word-pill .count{font-size:11px;opacity:0.7;margin-left:4px}
+.other-words{display:flex;flex-wrap:wrap;gap:4px}
+.word-small{padding:3px 10px;border-radius:20px;background:#f0fdf8;color:#0a6b4a;font-size:12px;border:1px solid #c8edd8}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.admin-header h2{font-size:20px;font-weight:600}
+.loading{text-align:center;padding:40px;color:#888;font-size:15px}
+.sticky-footer{position:sticky;bottom:0;background:#f5f5f5;padding:12px 0 16px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="s-form" class="screen active">
+  <div class="header">
+    <div class="sun">🌻</div>
+    <h1>Cafezão do São João</h1>
+    <p>O que cada colega tem de melhor que te agrada?<br>Escreva uma palavra ao lado de cada nome.<br><strong>Anônimo — ninguém saberá quem respondeu.</strong></p>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid #f0f0f0;margin-bottom:4px">
+      <span style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px">Colega</span>
+      <span style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.5px">Uma palavra</span>
+    </div>
+    <div id="name-list"></div>
+  </div>
+  <div class="sticky-footer">
+    <div class="progress-wrap">
+      <span class="badge" id="count-badge">0 de 25 respondidos</span>
+    </div>
+    <button class="btn btn-green" id="btn-send" onclick="submit()">Enviar respostas ✓</button>
+  </div>
+</div>
+
+<div id="s-done" class="screen">
+  <div class="done-wrap">
+    <div style="font-size:56px;margin-bottom:16px">🎉</div>
+    <h2>Obrigado!</h2>
+    <p>Suas respostas foram salvas.<br>O Adriano vai revelar tudo no cafezão!</p>
+    <button class="btn btn-outline btn-sm" onclick="reset()" style="margin:0 auto;width:auto;padding:10px 24px">Responder de novo</button>
+  </div>
+</div>
+
+<div id="s-admin" class="screen">
+  <div class="admin-header">
+    <h2>Resultados 📊</h2>
+    <button class="btn btn-outline btn-sm" onclick="showScreen('s-form')">← Voltar</button>
+  </div>
+  <div id="results-list"><div class="loading">Carregando...</div></div>
+</div>
+
+<div id="s-loading" class="screen">
+  <div class="loading" style="padding:80px 40px">
+    <div style="font-size:32px;margin-bottom:12px">⏳</div>
+    Enviando respostas...
+  </div>
+</div>
+
+</div>
+
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDlNVuuKL41OH2Gzye8XcYCMrRxpAw2GBY",
-    authDomain: "cafezoosaojoao.firebaseapp.com",
-    databaseURL: "https://cafezoosaojoao-default-rtdb.firebaseio.com",
-    projectId: "cafezoosaojoao",
-    storageBucket: "cafezoosaojoao.firebasestorage.app",
-    messagingSenderId: "269749140977",
-    appId: "1:269749140977:web:7da1eb20b24a8ee1cd1850"
-  };
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDlNVuuKL41OH2Gzye8XcYCMrRxpAw2GBY",
+  authDomain: "cafezoosaojoao.firebaseapp.com",
+  databaseURL: "https://cafezoosaojoao-default-rtdb.firebaseio.com",
+  projectId: "cafezoosaojoao",
+  storageBucket: "cafezoosaojoao.firebasestorage.app",
+  messagingSenderId: "269749140977",
+  appId: "1:269749140977:web:7da1eb20b24a8ee1cd1850"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const NAMES = [
+  "Alexinaldo Azevedo Venas Filho","Aline Almeida Santiago","Ana Beatriz Marques dos Santos",
+  "Carlos Gomes Bandeira Pantaleao","Cecilia dos Santos Bonfim","Daiane dos Santos Santos",
+  "Elida Josefina Berenguel","Elisangela de Almeida Sena","Eliton de Almeida Reis",
+  "Emerson Dias da Conceicao","Gabriel Silva dos Santos","Genivaldo Almeida de Santana",
+  "Gildete Maria da Silva","Iara Piedade Nascimento","Isabelle Santos da Silva",
+  "Keize Melo de Souza","Louise Santos Rosas","Maria Jose Oliveira Mateus",
+  "Moises Carvalho da Silva","Thais Paixao da Cunha","Tiago Nascimento Silva",
+  "Tatiane de Oliveira Barbosa","Savio Brito da Silva","Daniel Ferreira do Nascimento",
+  "Adriano Mattos"
+];
+
+function initials(n){ return n.split(' ').slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+function firstName(n){ return n.split(' ')[0]; }
+function lastName(n){ const p=n.split(' '); return p.length>1?p[p.length-1]:''; }
+function slug(n){ return n.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''); }
+
+function buildList(){
+  const list = document.getElementById('name-list');
+  list.innerHTML = '';
+  NAMES.forEach((name,i)=>{
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <div class="avatar">${initials(name)}</div>
+      <div class="name-col">
+        <div class="fname">${firstName(name)}</div>
+        <div class="lname">${lastName(name)}</div>
+      </div>
+      <input class="word" type="text" id="inp-${i}" placeholder="palavra..." maxlength="25"
+        autocomplete="off" spellcheck="false" oninput="onType(${i},this)"/>
+    `;
+    list.appendChild(row);
+  });
+}
+
+window.onType = function(i, el){
+  el.classList.toggle('filled', el.value.trim().length > 0);
+  updateCount();
+};
+
+window.updateCount = function(){
+  let count = 0;
+  NAMES.forEach((_,i)=>{ const el=document.getElementById('inp-'+i); if(el&&el.value.trim()) count++; });
+  document.getElementById('count-badge').textContent = count+' de 25 respondidos';
+};
+
+window.submit = async function(){
+  const batch = {};
+  let count = 0;
+  NAMES.forEach((name,i)=>{
+    const el = document.getElementById('inp-'+i);
+    if(el && el.value.trim()){ batch[slug(name)] = el.value.trim(); count++; }
+  });
+  if(count === 0){ alert('Escreva pelo menos uma palavra!'); return; }
+  showScreen('s-loading');
+  try {
+    await push(ref(db, 'respostas'), { palavras: batch, ts: Date.now() });
+    showScreen('s-done');
+  } catch(e){
+    alert('Erro ao salvar. Tente novamente.');
+    showScreen('s-form');
+  }
+};
+
+window.reset = function(){
+  buildList();
+  updateCount();
+  showScreen('s-form');
+};
+
+window.showScreen = function(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+};
+
+function showAdmin(){
+  showScreen('s-admin');
+  const listEl = document.getElementById('results-list');
+  listEl.innerHTML = '<div class="loading">Carregando...</div>';
+  onValue(ref(db, 'respostas'), (snapshot)=>{
+    const data = snapshot.val();
+    const agg = {};
+    NAMES.forEach(n=>{ agg[slug(n)]=[]; });
+    if(data){
+      Object.values(data).forEach(entry=>{
+        if(entry.palavras){
+          Object.entries(entry.palavras).forEach(([k,v])=>{
+            if(agg[k]) agg[k].push(v);
+          });
+        }
+      });
+    }
+    listEl.innerHTML='';
+    const totalRespostas = data ? Object.keys(data).length : 0;
+    const summary = document.createElement('div');
+    summary.style.cssText='margin-bottom:16px;font-size:14px;color:#666';
+    summary.textContent = `${totalRespostas} pessoa${totalRespostas!==1?'s':''} responderam`;
+    listEl.appendChild(summary);
+    NAMES.forEach(name=>{
+      const words = agg[slug(name)];
+      if(!words||words.length===0) return;
+      const freq={};
+      words.forEach(w=>{ const k=w.toLowerCase().trim(); freq[k]=(freq[k]||0)+1; });
+      const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+      const top3=sorted.slice(0,3);
+      const card=document.createElement('div');
+      card.className='result-card';
+      card.innerHTML=`
+        <div class="result-header">
+          <div class="avatar">${initials(name)}</div>
+          <div>
+            <div style="font-weight:600;font-size:14px">${name}</div>
+            <div style="font-size:12px;color:#888">${words.length} resposta${words.length!==1?'s':''}</div>
+          </div>
+        </div>
+        <div class="top-words">${top3.map(([w,c])=>`<span class="word-pill">${w}<span class="count">${c}x</span></span>`).join('')}</div>
+        ${sorted.length>3?`<div class="other-words">${sorted.slice(3).map(([w,c])=>`<span class="word-small">${w} ${c}x</span>`).join('')}</div>`:''}
+      `;
+      listEl.appendChild(card);
+    });
+    if(listEl.children.length<=1) listEl.innerHTML='<div class="loading">Nenhuma resposta ainda.</div>';
+  }, { onlyOnce: true });
+}
+
+let tapCount=0, tapTimer=null;
+document.querySelector('.header')?.addEventListener('click',()=>{
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer=setTimeout(()=>tapCount=0,1500);
+  if(tapCount>=5){ tapCount=0; showAdmin(); }
+});
+document.addEventListener('keydown',e=>{ if(e.ctrlKey&&e.shiftKey&&e.key==='A') showAdmin(); });
+
+buildList();
+updateCount();
 </script>
+</body>
+</html>
