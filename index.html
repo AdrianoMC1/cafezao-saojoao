@@ -66,7 +66,7 @@ input.word.filled{border-color:#1D9E75;background:#f0fdf8}
   </div>
   <div class="sticky-footer">
     <div class="progress-wrap">
-      <span class="badge" id="count-badge">0 de 25 respondidos</span>
+      <span class="badge" id="count-badge">0 de 39 respondidos</span>
     </div>
     <button class="btn btn-green" id="btn-send" onclick="submit()">Enviar respostas ✓</button>
   </div>
@@ -76,7 +76,7 @@ input.word.filled{border-color:#1D9E75;background:#f0fdf8}
   <div class="done-wrap">
     <div style="font-size:56px;margin-bottom:16px">🎉</div>
     <h2>Obrigado!</h2>
-    <p>Suas respostas foram salvas.<br>O Adriano vai revelar tudo no cafezão!</p>
+    <p>Suas respostas foram salvas.<br>O líder vai revelar tudo no cafezão!</p>
     <button class="btn btn-outline btn-sm" onclick="reset()" style="margin:0 auto;width:auto;padding:10px 24px">Responder de novo</button>
   </div>
 </div>
@@ -116,15 +116,44 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const NAMES = [
-  "Alexinaldo Azevedo Venas Filho","Aline Almeida Santiago","Ana Beatriz Marques dos Santos",
-  "Carlos Gomes Bandeira Pantaleao","Cecilia dos Santos Bonfim","Daiane dos Santos Santos",
-  "Elida Josefina Berenguel","Elisangela de Almeida Sena","Eliton de Almeida Reis",
-  "Emerson Dias da Conceicao","Gabriel Silva dos Santos","Genivaldo Almeida de Santana",
-  "Gildete Maria da Silva","Iara Piedade Nascimento","Isabelle Santos da Silva",
-  "Keize Melo de Souza","Louise Santos Rosas","Maria Jose Oliveira Mateus",
-  "Moises Carvalho da Silva","Thais Paixao da Cunha","Tiago Nascimento Silva",
-  "Tatiane de Oliveira Barbosa","Savio Brito da Silva","Daniel Ferreira do Nascimento",
-  "Adriano Mattos"
+  "Elson Rocha de Jesus",
+  "Adriele Ferreira de Oliveira",
+  "Carlos Heleno Lopes Rufino de Carvalho",
+  "Cristiane de Freitas Rocha",
+  "Emilly Santos de Santana",
+  "Hugo Reis Oliveira de Macedo",
+  "Lucas Santos de Almeida",
+  "Myla Christie Silva de Brito",
+  "Quezia Samile da Silva Rodrigues",
+  "Rafaela da Silva Santos",
+  "Renata Martins de Cassia",
+  "Viviane Pereira Reis",
+  "Willou Marcelo Barbosa Leite",
+  "Juliana Miranda de Jesus",
+  "Ana Paula Assis de Souza Santos",
+  "Caroline Marinho Oliveira",
+  "Daiane Porto Oliveira",
+  "Luis Victor Silva Santos",
+  "Roberta Araujo da Silva",
+  "Stefani Morais Farias Pereira",
+  "Elisa Ferreira da Silva",
+  "Janine da Silva Batista",
+  "Rebeca Santos Almeida",
+  "Gilcimar Pereira Mota",
+  "Lucas Silva da Conceição",
+  "Evelly dos Santos Evangelista",
+  "Ellen Cristina Santos Souza",
+  "Kauã Pablo Oliveira Alves",
+  "Samuel Vitor Oliveira Reis",
+  "Adilene de Jesus Barromeu",
+  "Rebeca Shirley Ferreira Braz",
+  "Daiane de Brito Sampaio",
+  "Amanda Borges de Jesus",
+  "Erica Santos dos Santos",
+  "Luane de Jesus Rodrigues",
+  "Gislane Almeida Ferreira",
+  "Marcio dos Santos Capistrano",
+  "Jenifer Ribeiro dos Santos"
 ];
 
 function initials(n){ return n.split(' ').slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
@@ -159,7 +188,7 @@ window.onType = function(i, el){
 window.updateCount = function(){
   let count = 0;
   NAMES.forEach((_,i)=>{ const el=document.getElementById('inp-'+i); if(el&&el.value.trim()) count++; });
-  document.getElementById('count-badge').textContent = count+' de 25 respondidos';
+  document.getElementById('count-badge').textContent = count+' de 38 respondidos';
 };
 
 window.submit = async function(){
